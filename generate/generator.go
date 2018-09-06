@@ -1,6 +1,6 @@
-//go:generate go-bindata -o "$PKG_DIR/bindata.go" -prefix $PKG_DIR -ignore .+go$ -nomemcopy -pkg $PKG_NAME $PKG_DIR
+//go:generate go-bindata -o "$PKG_DIR/bindata.go" -prefix $PKG_DIR -ignore .+go$ -nomemcopy -nometadata -pkg $PKG_NAME $PKG_DIR
 //go:generate swagger generate spec -o $PKG_DIR/swagger.json -b $SOURCE_PKG --scan-models
-//go:generate go-bindata -o "$PKG_DIR/bindata.go" -prefix $PKG_DIR -ignore .+go$ -nomemcopy -pkg $PKG_NAME $PKG_DIR
+//go:generate go-bindata -o "$PKG_DIR/bindata.go" -prefix $PKG_DIR -ignore .+go$ -nomemcopy -nometadata -pkg $PKG_NAME $PKG_DIR
 
 // Package generate provides go:generate shorthand for building swagger.json.
 //
