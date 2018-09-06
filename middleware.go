@@ -6,12 +6,13 @@ import (
 	"net/http"
 )
 
+// SwaggerOpts defines options for the WithSwagger middleware
 type SwaggerOpts struct {
-	SwaggerSpec []byte
-	DocsURL     string
-	SpecURL     string
-	RedocURL    string
-	Title       string
+	SwaggerSpec []byte // The Swagger specification as JSON
+	DocsURL     string // Root-relative URL to serve human readable docs; defaults to /docs
+	SpecURL     string // Root-relative URL to serve Swagger JSON; defaults to /swagger.json
+	RedocURL    string // Optional location of Redoc to use
+	Title       string // Title for the human readable docs
 }
 
 func ensureDefaults(opts *SwaggerOpts) {
@@ -26,6 +27,8 @@ func ensureDefaults(opts *SwaggerOpts) {
 	}
 }
 
+// WithSwagger wraps an existing http.Handler and serves a swagger specification
+// and human readable docs
 func WithSwagger(swagger SwaggerOpts, handler http.Handler) http.Handler {
 
 	ensureDefaults(&swagger)
