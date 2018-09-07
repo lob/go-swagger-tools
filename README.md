@@ -9,7 +9,7 @@ This repository contains a helper, `mkswagger`, which generates `swagger.json` a
 This can be installed via `go get`:
 
 ```sh
-$ go get github.com/lob/go-swagger-tools/cmd/mkswagger
+$ go get github.com/lob/go-swagger-tools/cmds/mkswagger
 ```
 
 Once installed it can be used with a `//go:generate` comment:
