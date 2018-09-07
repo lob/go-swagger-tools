@@ -4,22 +4,24 @@ This repository contains some tools to make integrating Swagger with Go services
 
 ## Generating Swagger Specifications
 
-Running `go generate` on the `generate` sub-package will create a `swagger.json` and `bindata.go` file based on swagger [comment docs](https://goswagger.io/use/spec.html. This relies on [go-swagger](https://goswagger.io) and [go-bindata](https://github.com/jteeuwen/go-bindata); the consumer is responsible for ensuring both utilities are available.
+This repository contains a helper, `mkswagger`, which generates `swagger.json` and `bindata.go` file based on swagger [comment docs](https://goswagger.io/use/spec.html).
 
-There are three environment variables used to pass "parameters" to the generator:
-
-* `PKG_DIR`
-    The absolute path where the resulting files will be placed.
-* `PKG_NAME`
-    The name for the resulting Go package where `bindata.go` will be placed.
-* `SOURCE_PKG`
-    The package name where `go-swagger` will begin searching for swagger definitions. This should be in the form of a Go import path.
-
-Invoke `go generate` on the `github.com/lob/swagger/generate` package with these values set in the environment. An example invocation might look like:
+This can be installed via `go get`:
 
 ```sh
-$ PKG_NAME=data PKG_DIR=$(PWD)/data SOURCE_PKG=github.com/lob/tracking-api/cmd/serve go generate github.com/lob/go-swagger-tools/generate
+$ go get github.com/lob/go-swagger-tools/cmd/mkswagger
 ```
+
+Once installed it can be used with a `//go:generate` comment:
+
+```go
+//go:generate mkswagger -i github.com/lob/tracking-api/cmd/serve
+package swagger
+```
+
+This will generate `swagger.json` and `bindata.go` in the same directory and package as its invocation (in this example the `swagger` package). The specification will be generating by loading the input packge (`-i`) and walking the source tree.
+
+Invoke `mkswagger -help` for a complete description of options.
 
 ## HTTP Middleware
 
