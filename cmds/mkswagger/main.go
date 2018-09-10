@@ -1,12 +1,15 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path"
 	"regexp"
 
 	"github.com/go-swagger/go-swagger/cmd/swagger/commands/generate"
+	"github.com/go-swagger/go-swagger/scan"
 	flags "github.com/jessevdk/go-flags"
 	bindata "github.com/jteeuwen/go-bindata"
 )
@@ -22,10 +25,33 @@ func init() {
 	gofiles = regexp.MustCompile(`.+\.go$`)
 }
 
+func generateSpec(s generate.SpecFile, outputFilename string) error {
+	var opts scan.Opts
+	opts.BasePath = s.BasePath
+	opts.ScanModels = s.ScanModels
+	opts.BuildTags = s.BuildTags
+	swspec, err := scan.Application(opts)
+	if err != nil {
+		return err
+	}
+
+	var b []byte
+	b, err = json.MarshalIndent(swspec, "", "  ")
+
+	if err != nil {
+		return err
+	}
+	if outputFilename == "" {
+		fmt.Println(string(b))
+		return nil
+	}
+	return ioutil.WriteFile(outputFilename, b, 0644)
+}
+
 func main() {
 
 	pwd, _ := os.Getwd()
-	args, err := flags.Parse(&opts)
+	_, err := flags.Parse(&opts)
 
 	if err != nil {
 		os.Exit(1)
@@ -52,16 +78,14 @@ func main() {
 	}
 
 	// generate the swagger specification
-	outputFile := flags.Filename(path.Join(pwd, "swagger.json"))
-	fmt.Println("Generate swagger.json...")
+	outputFilename := path.Join(pwd, "swagger.json")
+	fmt.Println("Generating swagger.json...")
 	spec := generate.SpecFile{
 		ScanModels: true,
 		BasePath:   string(opts.Input),
 		Compact:    false,
-		Output:     outputFile,
-		Input:      opts.Input,
 	}
-	err = spec.Execute(args)
+	err = generateSpec(spec, outputFilename)
 	if err != nil {
 		// Note that go-swagger has the annoying habit of Fatal-ing,
 		// so we may have already exit-ed before reaching this point.
