@@ -11,7 +11,7 @@ import (
 	"github.com/go-swagger/go-swagger/cmd/swagger/commands/generate"
 	"github.com/go-swagger/go-swagger/scan"
 	flags "github.com/jessevdk/go-flags"
-	bindata "github.com/jteeuwen/go-bindata"
+	bindata "github.com/kevinburke/go-bindata"
 )
 
 var gofiles *regexp.Regexp
